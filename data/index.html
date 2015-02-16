@@ -46,6 +46,10 @@
     .value {
       margin-left: 5px;
     }
+
+    .url {
+      font-style: italic;
+    }
   </style>
 
   <!-- script tag are stripped out, your main.js is where you have to put the code -->
@@ -68,6 +72,7 @@
     <label for="radioDepth2">2 Levels</label>
     <input id="radioDepth2" name="radioDepth" value="2" type="radio" />-->
     <label class="section">Last Loaded: </label><span id="currentPageCache" class="value">100</span>
+    <span id="lastLoadedURL" class="value url"></span>
     <label class="section">Total: </label><span id="totalCache" class="value">500</span>
 <!--     <button id="reset" style="padding:1em">Reset</button>
  -->  </div>
