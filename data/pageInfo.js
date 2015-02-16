@@ -1,76 +1,68 @@
-var documentSize = 0;
-var imagesSize = 0;
-var imagesBatch;
-var currentRequests = 0;
-var currentImageRequested = 0;
-var imagesToLoad;
-var imagesLength;
 var imageURLs = [];
+var iframes = [];
+var linksCalculated = 0;
 
 self.port.on("requestPageInfo", function() {
-  documentSize = document.body.innerHTML.length;
-  var images = document.getElementsByTagName('img');
-  var imagesSize = 0;
-  imagesToLoad = images;
-  imagesLength = imagesToLoad.length;
-  console.log("IMAGES " + imagesLength);
-  imageURLs.push(document.location.toString());
-  for (var i = 0; i < images.length; i++) {
-    imageURLs.push(images[i].src);
-  }
-  //loadImages();
+  var links = document.getElementsByTagName('a');
+  calculatePageSize(document);
+  // if (links.length === 0) {
+  //   self.port.emit("pageInfo", imageURLs);
+  // } else {
+  //   loadLinks(links);
+  // }
   self.port.emit("pageInfo", imageURLs);
 });
 
-function loadImages() {
-  for(currentRequests; currentRequests < 4;) {
-    console.log("PENOTE " + currentImageRequested + " " + imagesLength);
-    if (currentImageRequested >= imagesLength) {
-      break;
-    }
-    console.log("PENE " + currentImageRequested + " " + currentRequests + " " + imagesToLoad[currentImageRequested].src);
-    calculateImageSize(imagesToLoad[currentImageRequested].src);
-    currentRequests += 1;
-    currentImageRequested += 1;
-  }
-  console.log("FINISH " + currentImageRequested + " " +  currentRequests);
-  if (currentImageRequested === imagesLength && currentRequests === 0) {
-    //self.port.emit("pageInfo", documentSize + imagesSize);
-    self.port.emit("pageInfo", imageURLs);
+function calculatePageSize(doc) {
+  var images = document.getElementsByTagName('img');
+  imageURLs.push(doc.location.toString());
+  for (var i = 0; i < images.length; i++) {
+    imageURLs.push(images[i].src);
   }
 }
 
-
-function calculateImageSize(src) {
-  console.log("CACOTA " + src);
-  var xhr = new XMLHttpRequest();
-  xhr.withCredentials = true;
-  xhr.open('GET', src, true);
-  //xhr.responseType = 'blob';
-  xhr.responseType = 'arraybuffer';
-  xhr.onreadystatechange
-  xhr.onload = function(e) {
-    console.log("CACA " + this.status + " " + currentImageRequested + " " + imagesSize);
-    if (this.status == 200) {
-      var uInt8Array = new Uint8Array(this.response);
-      var byte3 = uInt8Array[4];
-      var blob = new Blob([xhr.response], {type: 'application/octet-binary'});
-      //var blob = this.response;
-      imagesSize += blob.size;
-      currentRequests -= 1;
-      loadImages();
-    }
-  };
-  xhr.timeout = 4000;
-  xhr.ontimeout = function () {
-    currentRequests -= 1;
-    console.log("----------- Timed out!!! ------------");
-    loadImages();
+function loadLinks(links) {
+  var i;
+  var link;
+  var offscreenIframe;
+  //var html = '<body>Foo</body>';
+  console.log("LOAD " + links.length);
+  for(i=0; i<links.length; ++i) {
+    console.log("LOADING " + links[i].href);
+    offscreenIframe = document.createElement('iframe');
+    offscreenIframe.style.display = 'none';
+    // offscreenIframe.onload = function () {
+    //   console.log("LOADED");
+    //   var iframe = offscreenIframe;
+    //   calculatePageSize(iframe.contentDocument);
+    //   linksCalculated += 1;
+    //   if (linksCalculated === links.length) {
+    //     self.port.emit("pageInfo", imageURLs);
+    //   }
+    // };
+    offscreenIframe.addEventListener('load', (function () {
+      var iframe = offscreenIframe;
+      return function() {
+        console.log("CACOTA " + iframe.contentDocument);
+        iframe.contentWindow.onload = function() {
+          var head = iframe.contentDocument.getElementsByTagName("head")[0];
+          var infoScript = document.createElement('script');
+          infoScript.type = 'text/javascript';
+          infoScript.src = 'pageInfo.js';
+          head.appendChild(myscript);
+          // calculatePageSize(iframe.contentDocument);
+          // linksCalculated += 1;
+          // if (linksCalculated === links.length) {
+          //   self.port.emit("pageInfo", imageURLs);
+          // }
+        };
+      };
+    })(), false);
+    iframes.push(offscreenIframe);
+    link = links[i].href.replace("http://","")
+      .replace("https://","");
+    //offscreenIframe.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
+    offscreenIframe.src = links[i].href;
+    document.body.appendChild(offscreenIframe);
   }
-  xhr.onerror = function (e) {
-    currentRequests -= 1;
-    console.log("----------- Error!!! ------------");
-    loadImages();
-  };
-  xhr.send();
 }
