@@ -8,34 +8,43 @@
       font-size: 14px;
       color: #4D4D4D;
     }
+
     button {
       padding: 10px;
     }
+
     label {
       display: inline-block;
-      height: 25px;
-      line-height: 25px;
+      height: 26px;
+      line-height: 26px;
+      vertical-align: middle;
     }
 
-    label:before, label:after {
+/*    label:before, label:after {
         content: attr(title);
         padding: 50px;
         color: rgba(255,255,255,.1);
         position: absolute;
+    }*/
+
+    .section {
+      margin-left: 15px;
+      font-weight: bold;
     }
 
     .results {
-      float: right;
-      display: inline-block;
-      width: 200px;
+      display: block;
+      width: 95%;
       height: 25px;
       background-color: transparent;
       border: 1px solid #B2B2B2;
-      padding-left: 10px;
       border-radius: 5px;
-      margin-right: 20px;
-      margin-top: 5px;
+      margin-left: 10px;
+      margin-right: 5px;
+    }
 
+    .value {
+      margin-left: 5px;
     }
   </style>
 
@@ -43,12 +52,25 @@
   <script>
     console.log("friends")
   </script>
-
+  <body>
   <!-- button added, ignore JS handler but not style. However 'padding' is filtered out -->
-  <!-- <button id="my-button" onclick="alert('ok')" style="padding:1em">Hello!</button> -->
+  <!--  -->
   <div class="results">
-    <label>Current Page:</label>
-    <label>Total:</label>
+    <label class="section" for="images">Images: </label>
+    <input value="None" id="images" name="images" type="checkbox" />
+    <label class="section" for="readerMode">Reader Mode: </label>
+    <input value="None" id="readerMode" name="readerMode" type="checkbox" />
+    <label class="section">Cache Depth: </label>
+    <label for="radioDepth0">None</label>
+    <input id="radioDepth0" name="radioDepth" value="0" type="radio" checked="checked" />
+    <label for="radioDepth1">1 Level</label>
+    <input id="radioDepth1" name="radioDepth" value="1" type="radio" />
+    <label for="radioDepth2">2 Levels</label>
+    <input id="radioDepth2" name="radioDepth" value="2" type="radio" />
+    <label class="section">Current Page: </label><span id="currentPageCache" class="value">100</span>
+    <label class="section">Total: </label><span id="totalCache" class="value">500</span>
+    <button id="reset" style="padding:1em">Reset</button>
   </div>
-
+  <script type="text/javascript" src="main.js"></script>
+  </body>
 </html>
