@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <!-- style tag allowed, but ignored atm-->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+      color: #4D4D4D;
+    }
+
+    button {
+      padding: 10px;
+    }
+
+    label {
+      display: inline-block;
+      height: 26px;
+      line-height: 26px;
+      vertical-align: middle;
+    }
+
+/*    label:before, label:after {
+        content: attr(title);
+        padding: 50px;
+        color: rgba(255,255,255,.1);
+        position: absolute;
+    }*/
+
+    .section {
+      margin-left: 15px;
+      font-weight: bold;
+    }
+
+    .results {
+      display: block;
+      width: 95%;
+      height: 25px;
+      background-color: transparent;
+      border: 1px solid #B2B2B2;
+      border-radius: 5px;
+      margin-left: 10px;
+      margin-right: 5px;
+    }
+
+    .value {
+      margin-left: 5px;
+    }
+
+    .url {
+      font-style: italic;
+    }
+  </style>
+  <body>
+  <div class="results">
+    <label class="section">Last Loaded: </label><span id="currentPageCache" class="value">100</span>
+    <span id="lastLoadedURL" class="value url"></span>
+  </div>
+  <script type="text/javascript" src="last.js"></script>
+  </body>
+</html>

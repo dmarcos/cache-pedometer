@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <!-- style tag allowed, but ignored atm-->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+      color: #4D4D4D;
+    }
+
+    button {
+      padding: 10px;
+    }
+
+    label {
+      display: inline-block;
+      height: 26px;
+      line-height: 26px;
+      vertical-align: middle;
+    }
+
+/*    label:before, label:after {
+        content: attr(title);
+        padding: 50px;
+        color: rgba(255,255,255,.1);
+        position: absolute;
+    }*/
+
+    .section {
+      margin-left: 15px;
+      font-weight: bold;
+    }
+
+    .results {
+      display: block;
+      width: 95%;
+      height: 25px;
+      background-color: transparent;
+      border: 1px solid #B2B2B2;
+      border-radius: 5px;
+      margin-left: 10px;
+      margin-right: 5px;
+    }
+
+    .value {
+      margin-left: 5px;
+    }
+
+    .url {
+      font-style: italic;
+    }
+
+    form[name="cacheDepth"] {
+      display: inline-block;
+    }
+  </style>
+  <body>
+  <div class="results">
+    <label class="section">Total: </label><span id="totalCache" class="value">0</span>
+    <label class="section">Cache Depth: </label>
+    <form name="cacheDepth">
+      <label for="radioDepth0">Only current site</label>
+      <input id="radioDepth0" name="radioDepth" value="0" type="radio" />
+      <label for="radioDepth1">1 Level</label>
+      <input id="radioDepth1" name="radioDepth" value="1" type="radio" checked="checked" />
+    </form>
+    <!--      <label class="section" for="images">Images: </label>
+        <input value="None" id="images" name="images" type="checkbox" />
+        <label class="section" for="readerMode">Reader Mode: </label>
+        <input value="None" id="readerMode" name="readerMode" type="checkbox" /> -->
+  </div>
+  <script type="text/javascript" src="total.js"></script>
+  </body>
+</html>
