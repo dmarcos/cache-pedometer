@@ -51,8 +51,9 @@
       font-style: italic;
     }
 
-    form[name="cacheDepth"] {
+    form {
       display: inline-block;
+      margin-left: 10px;
     }
   </style>
   <body>
@@ -65,10 +66,10 @@
       <label for="radioDepth1">1 Level</label>
       <input id="radioDepth1" name="radioDepth" value="1" type="radio" checked="checked" />
     </form>
-    <!--      <label class="section" for="images">Images: </label>
-        <input value="None" id="images" name="images" type="checkbox" />
-        <label class="section" for="readerMode">Reader Mode: </label>
-        <input value="None" id="readerMode" name="readerMode" type="checkbox" /> -->
+    <form name="readability">
+      <label class="section" for="readerMode">Reader Mode: </label>
+      <input id="readerMode" name="readerMode" type="checkbox" />
+    </form>
   </div>
   <script type="text/javascript" src="total.js"></script>
   </body>

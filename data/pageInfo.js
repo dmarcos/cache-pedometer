@@ -2,20 +2,47 @@ var iframes = [];
 var linksCalculated = 0;
 
 self.port.on("requestPageInfo", function(data) {
-  var links = [];
   var cacheDepth = parseInt(data.cacheDepth);
+  var readerMode = data.readerMode;
   if (window.parent !== window) {
     if (window.name !== 'link') {
       return;
     }
   }
-  var imageURLs = extractImages(document);
+  if (readerMode) {
+    var scsc = document.createElement("script");
+    scsc.src = "https://mxr.mozilla.org/mozilla-central/source/toolkit/components/reader/content/Readability.js?raw=1";
+    scsc.setAttribute("type", "application/javascript;version=1.7")
+    document.head.appendChild(scsc);
+    scsc.onload = () => {
+     var readability = new unsafeWindow.Readability(document.location.href, document).parse();
+     if (readability && readability.content) {
+        document.head.innerHTML = "";
+        document.body.innerHTML = readability.content;
+        extractCachedInfo(document, cacheDepth);
+     }
+     else {
+      console.log("XXXXXXXX " + readerMode);
 
-  var kk = cacheDepth !== 0;
-  console.log("CACHE DEPTH " + " " +  + " " + cacheDepth + " " + kk);
+        self.port.emit("pageInfo", {
+          images: [],
+          links: []
+        });
+     }
+    }
+  } else {
+    extractCachedInfo(document, cacheDepth);
+  }
+
+});
+
+function extractCachedInfo(doc, cacheDepth) {
+  var imageURLs = extractImages(doc);
+  var links = [];
+
   if (window.parent === window &&
       cacheDepth !== 0) {
-    links = extractLinks(document);
+    links = extractLinks(doc);
     loadLinks(links);
   }
 
@@ -23,8 +50,7 @@ self.port.on("requestPageInfo", function(data) {
     images: imageURLs,
     links: links
   });
-
-});
+}
 
 function extractImages(doc) {
   var imageURLs = [];
@@ -62,8 +88,7 @@ function loadLinks(links) {
     offscreenIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
     offscreenIframe.style.display = 'none';
     offscreenIframe.onload = function () {
-      var iframe = offscreenIframe;
-      console.log("LOADED " + iframe.contentWindow);
+      //var iframe = offscreenIframe;
       //iframe.contentDocument.onload =
       //head.appendChild(infoScript);
 
